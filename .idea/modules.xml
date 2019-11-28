@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/deconvolve-rif.iml" filepath="$PROJECT_DIR$/deconvolve-rif.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microbench.iml" filepath="$PROJECT_DIR$/microbench.iml" />
     </modules>
   </component>
 </project>

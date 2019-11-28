@@ -3,6 +3,7 @@ package org.hkijena.microbench;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
+import org.hkijena.microbench.caches.BenchmarkCache;
 import org.hkijena.microbench.caches.TIFFImageCache;
 
 import java.nio.file.Path;
@@ -18,6 +19,7 @@ public class DataInterface {
     private TIFFImageCache<FloatType> outputPercentile;
     private TIFFImageCache<FloatType> outputCanny;
     private TIFFImageCache<FloatType> outputWiener;
+    private BenchmarkCache benchmark;
 
     public DataInterface(Path inputDirectory, Path outputDirectory) {
         this.outputDirectory = outputDirectory;
@@ -29,6 +31,7 @@ public class DataInterface {
         outputPercentile = new TIFFImageCache<>(outputDirectory.resolve("percentile.tif"), new FloatType(), inputImage);
         outputCanny = new TIFFImageCache<>(outputDirectory.resolve("canny_edges.tif"), new FloatType(), inputImage);
         outputWiener = new TIFFImageCache<>(outputDirectory.resolve("wiener2.tif"), new FloatType(), inputImage);
+        benchmark = new BenchmarkCache(outputDirectory.resolve("runtime.csv"));
     }
 
     @Override
@@ -70,5 +73,9 @@ public class DataInterface {
 
     public TIFFImageCache<FloatType> getOutputWiener() {
         return outputWiener;
+    }
+
+    public BenchmarkCache getBenchmark() {
+        return benchmark;
     }
 }

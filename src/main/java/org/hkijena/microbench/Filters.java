@@ -502,6 +502,20 @@ public class Filters {
         return target;
     }
 
+    public static Img<FloatType> convertBooleanToFloat(Img<NativeBoolType> src) {
+        Img<FloatType> target = (new ArrayImgFactory<>(new FloatType())).create(getDimensions(src));
+        RandomAccess<FloatType> targetAccess = target.randomAccess();
+        Cursor<NativeBoolType> cursor = src.cursor();
+
+        while(cursor.hasNext()) {
+            cursor.fwd();
+            targetAccess.setPosition(cursor);
+            targetAccess.get().set(cursor.get().get() ? 1.0f : 0.0f);
+        }
+
+        return target;
+    }
+
     public static <T extends RealType<T>> Img<NativeBoolType> localMaxima(Img<T> source, Shape strel, Img<NativeBoolType> mask) {
         Img<T> dilated = source.copy();
         dilated = Dilation.dilate(dilated, strel, 1);
@@ -647,5 +661,84 @@ public class Filters {
             cursor.fwd();
             cursor.get().set(Math.max(0, Math.min(1, cursor.get().get())));
         }
+    }
+
+    public static Img<FloatType> blur(Img<FloatType> img, int kernelSize) {
+        Img<FloatType> kernel = img.factory().create(kernelSize, kernelSize);
+        setTo(kernel, new FloatType(1.0f / (kernelSize * kernelSize)));
+
+        final ImageJ ij = Main.IMAGEJ;
+        RandomAccessibleInterval<FloatType> res = ij.op().filter().convolve(Views.interval(Views.extendZero(img), img), kernel);
+        Img<FloatType> result = img.factory().create(getDimensions(img));
+        copy(res, result);
+        return result;
+    }
+
+    public static Img<FloatType> squared(Img<FloatType> img) {
+        Img<FloatType> result = img.copy();
+        Cursor<FloatType> cursor = result.cursor();
+        while(cursor.hasNext()) {
+            cursor.fwd();
+            cursor.get().set(cursor.get().get() * cursor.get().get());
+        }
+        return result;
+    }
+
+    public static float mean(Img<FloatType> img) {
+        Cursor<FloatType> cursor = img.cursor();
+        float sum = 0;
+        while(cursor.hasNext()) {
+            cursor.fwd();
+            sum += cursor.get().get();
+        }
+        return sum / (img.dimension(0) * img.dimension(1));
+    }
+
+    public static Img<FloatType> calculateVariance(Img<FloatType> imgMean, Img<FloatType> img2Mean) {
+        Img<FloatType> result = imgMean.factory().create(getDimensions(imgMean));
+        Cursor<FloatType> cursor = result.localizingCursor();
+        RandomAccess<FloatType> meanAccess = imgMean.randomAccess();
+        RandomAccess<FloatType> sqMeanAccess = img2Mean.randomAccess();
+        while(cursor.hasNext()) {
+            cursor.fwd();
+            meanAccess.setPosition(cursor);
+            sqMeanAccess.setPosition(cursor);
+            cursor.get().set(sqMeanAccess.get().get() - (meanAccess.get().get() * meanAccess.get().get()) + (float)1e-06);
+        }
+        return result;
+    }
+
+    /**
+     * Implementation of Matlab's wiener2 deconvolution
+     * @param img
+     * @return
+     */
+    public static Img<FloatType> wiener2(Img<FloatType> img, int neighborship, float noiseVariance) {
+        final ImageJ ij = Main.IMAGEJ;
+        Img<FloatType> img_mean = blur(img, neighborship);
+        Img<FloatType> img2_mean = blur(squared(img), neighborship);
+        Img<FloatType> variance = calculateVariance(img_mean, img2_mean);
+        if(noiseVariance <= 0) {
+            noiseVariance = mean(variance);
+        }
+
+        Img<FloatType> result = img.factory().create(getDimensions(img));
+        Cursor<FloatType> resultCursor = result.localizingCursor();
+        RandomAccess<FloatType> inputAccess = img.randomAccess();
+        RandomAccess<FloatType> meanAccess = img_mean.randomAccess();
+        RandomAccess<FloatType> varAccess = variance.randomAccess();
+        while(resultCursor.hasNext()) {
+            resultCursor.fwd();
+            inputAccess.setPosition(resultCursor);
+            meanAccess.setPosition(resultCursor);
+            varAccess.setPosition(resultCursor);
+
+            float x = inputAccess.get().get();
+            float mu = meanAccess.get().get();
+            float sigma2 = varAccess.get().get();
+
+            resultCursor.get().set(mu + ((sigma2 - noiseVariance) / sigma2) * (x - mu));
+        }
+        return result;
     }
 }

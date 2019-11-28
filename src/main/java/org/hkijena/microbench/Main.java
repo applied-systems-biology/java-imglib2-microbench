@@ -44,10 +44,6 @@ public class Main {
         threads.setRequired(false);
         options.addOption(threads);
 
-        Option algorithm = new Option("a", "algorithm", true, "imglib2 or deconvlab2");
-        algorithm.setRequired(true);
-        options.addOption(algorithm);
-
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         CommandLine cmd = null;
@@ -68,8 +64,6 @@ public class Main {
         if(cmd.hasOption("threads")) {
             numThreads = Integer.parseInt(cmd.getOptionValue("threads"));
         }
-
-        String selectedAlgorithm = cmd.getOptionValue("algorithm");
 
         System.out.println("Running with " + numThreads + " threads");
 
