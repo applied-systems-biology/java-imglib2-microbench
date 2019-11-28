@@ -3,9 +3,7 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout/3.7.4/miglayout-3.7.4-swing.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout/3.7.4/miglayout-3.7.4-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout/3.7.4/miglayout-3.7.4-sources.jar!/" />
     </SOURCES>

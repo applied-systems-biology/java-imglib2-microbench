@@ -493,10 +493,18 @@ public class Filters {
         RandomAccess<UnsignedByteType> targetAccess = target.randomAccess();
         Cursor<FloatType> cursor = src.cursor();
 
+        float imax = 0;
+
+        while(cursor.hasNext()) {
+            cursor.fwd();
+            imax = Math.max(imax, cursor.get().get());
+        }
+
+        cursor = src.cursor();
         while(cursor.hasNext()) {
             cursor.fwd();
             targetAccess.setPosition(cursor);
-            targetAccess.get().set((int)(cursor.get().get() * 255));
+            targetAccess.get().set((int)(cursor.get().get() / imax * 255));
         }
 
         return target;

@@ -79,11 +79,13 @@ public class Microbench extends DAGTask {
         // Canny edge detector
         Img<FloatType> img_canny;
         {
+            Img<UnsignedByteType> img_8u = Filters.convertFloatToUByte(img);
             CannyEdgeDetector cannyEdgeDetector = new CannyEdgeDetector();
             cannyEdgeDetector.setGaussianKernelRadius(1);
-            cannyEdgeDetector.setLowThreshold(0.1f);
-            cannyEdgeDetector.setHighThreshold(0.2f);
-            ImagePlus imagePlus = ImageJFunctions.wrap(img, "img");
+            cannyEdgeDetector.setLowThreshold(0.1f * 255f);
+            cannyEdgeDetector.setHighThreshold(0.2f * 255f);
+            cannyEdgeDetector.setContrastNormalized(false);
+            ImagePlus imagePlus = ImageJFunctions.wrap(img_8u, "img");
             ImagePlus result = cannyEdgeDetector.process(imagePlus);
             img_canny = ImageJFunctions.convertFloat(result);
         }

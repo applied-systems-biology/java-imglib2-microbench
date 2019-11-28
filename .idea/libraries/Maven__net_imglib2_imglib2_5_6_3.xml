@@ -3,9 +3,7 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/net/imglib2/imglib2/5.6.3/imglib2-5.6.3.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/net/imglib2/imglib2/5.6.3/imglib2-5.6.3-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/net/imglib2/imglib2/5.6.3/imglib2-5.6.3-sources.jar!/" />
     </SOURCES>

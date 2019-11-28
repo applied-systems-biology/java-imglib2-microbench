@@ -3,9 +3,7 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/net/imagej/imagej-scripting/0.8.2/imagej-scripting-0.8.2.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/net/imagej/imagej-scripting/0.8.2/imagej-scripting-0.8.2-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/net/imagej/imagej-scripting/0.8.2/imagej-scripting-0.8.2-sources.jar!/" />
     </SOURCES>
