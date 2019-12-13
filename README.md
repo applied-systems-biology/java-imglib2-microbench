@@ -14,6 +14,8 @@ https://applied-systems-biology.github.io/misa-framework/
 
 Runs common image processing algorithms on the input images.
 
+Example data: https://github.com/applied-systems-biology/misa-framework/releases/download/1.0.0/misaxx_microbench_example_data.zip
+
 # Copyright
 
 Copyright by Ruman Gerst
